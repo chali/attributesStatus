@@ -1,0 +1,34 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+def test = {
+    println this
+}
+
+dependencies {
+    implementation('junit:junit:4.12') {
+        test()
+    }
+    implementation('org.junit:junit4-engine:5.+', withStatus("release", {
+        exclude group:'junit', module: 'junit'
+    }))
+}
+
+Closure withStatus(String requestedStatus, Closure additionalConfiguratiton = {}) {
+    def configurationClosure = {
+        attributes {
+            attribute(Attribute.of("org.gradle.status", String), requestedStatus )
+        }
+        additionalConfiguratiton.delegate = it
+        additionalConfiguratiton.call()
+    }
+    return configurationClosure    
+}
+
+
