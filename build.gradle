@@ -7,14 +7,7 @@ repositories {
     }
 }
 
-def test = {
-    println this
-}
-
 dependencies {
-    implementation('junit:junit:4.12') {
-        test()
-    }
     implementation('org.junit:junit4-engine:5.+', withStatus("release", {
         exclude group:'junit', module: 'junit'
     }))
