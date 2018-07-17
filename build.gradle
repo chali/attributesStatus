@@ -7,28 +7,17 @@ repositories {
     }
 }
 
-def test = {
-    println this
-}
-
 dependencies {
-    implementation('junit:junit:4.12') {
-        test()
+    implementation('org.junit:junit4-engine:5.+') {
+        attributes(withStatus("release"))
     }
-    implementation('org.junit:junit4-engine:5.+', withStatus("release", {
-        exclude group:'junit', module: 'junit'
-    }))
 }
 
-Closure withStatus(String requestedStatus, Closure additionalConfiguratiton = {}) {
-    def configurationClosure = {
-        attributes {
-            attribute(Attribute.of("org.gradle.status", String), requestedStatus )
+Action<AttributeContainer> withStatus(String requestedStatus) {
+    return new Action<AttributeContainer>() {
+        void execute(AttributeContainer attributes) {
+            attributes.attribute(Attribute.of("org.gradle.status", String), requestedStatus )
         }
-        additionalConfiguratiton.delegate = it
-        additionalConfiguratiton.call()
     }
-    return configurationClosure    
 }
-
 
