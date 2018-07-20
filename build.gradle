@@ -7,11 +7,51 @@ repositories {
     }
 }
 
-dependencies {
-    implementation('org.junit:junit4-engine:5.+') {
-        attributes(withStatus("release"))
+ext.release = {
+    withStatus('release')   
+}
+
+ext.integration = {
+    withStatus('integration')   
+}
+
+//experiments
+/*
+configurations.all {
+    attributes(release())
+}
+
+configurations.all {
+    withDependencies { dependencies ->
+        dependencies.each {
+
+            it.attributes(integration())
+        }        
     }
 }
+*/
+
+dependencies {
+    implementation('org.junit:junit4-engine:5.+') {
+        attributes(integration())
+    }
+    implementation('org.junit:junit-engine-api:5.+') {
+        attributes(release())
+    }
+    
+    //experiments
+    /*components.all {
+        allVariants {
+            withDependencies { dependencies ->
+                dependencies.each {
+                    it.attributes(integration())
+                }
+            }
+        }
+    }*/
+}
+
+
 
 Action<AttributeContainer> withStatus(String requestedStatus) {
     return new Action<AttributeContainer>() {
