@@ -1,0 +1,35 @@
+allprojects {
+    buildscript {
+        configurations.all {
+            resolutionStrategy.eachDependency(new ExtractVersionAction())
+            withDependencies(new SetAttributesAction())
+        }
+    }
+    configurations.all {
+        resolutionStrategy.eachDependency(new ExtractVersionAction())
+        withDependencies(new SetAttributesAction())
+    }
+}
+
+class ExtractVersionAction implements Action<DependencyResolveDetails> {
+    void execute(DependencyResolveDetails details) {
+        if (details.requested.version.contains('*')) {
+            int starIndex = details.requested.version.indexOf('*')
+            details.useVersion details.requested.version.substring(0, starIndex)
+        }   
+    }
+}
+
+class SetAttributesAction implements Action<DependencySet> {
+    void execute(DependencySet dependencies) {
+        dependencies.each {
+            if (it.version.contains('*')) {
+                int starIndex = it.version.indexOf('*')
+                String status = it.version.substring(starIndex + 1)
+                it.attributes {
+                    attribute(Attribute.of("org.gradle.status", String), status )
+                }
+            }
+        }   
+    }
+}

@@ -1,3 +1,16 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+    }
+
+    dependencies {
+        classpath 'org.junit:junit4-engine:5.+*release'
+    }
+}
+
 apply plugin: 'java'
 
 repositories {
@@ -7,57 +20,7 @@ repositories {
     }
 }
 
-ext.release = {
-    withStatus('release')   
-}
-
-ext.integration = {
-    withStatus('integration')   
-}
-
-//experiments
-/*
-configurations.all {
-    attributes(release())
-}
-
-configurations.all {
-    withDependencies { dependencies ->
-        dependencies.each {
-
-            it.attributes(integration())
-        }        
-    }
-}
-*/
-
 dependencies {
-    implementation('org.junit:junit4-engine:5.+') {
-        attributes(integration())
-    }
-    implementation('org.junit:junit-engine-api:5.+') {
-        attributes(release())
-    }
-    
-    //experiments
-    /*components.all {
-        allVariants {
-            withDependencies { dependencies ->
-                dependencies.each {
-                    it.attributes(integration())
-                }
-            }
-        }
-    }*/
-}
-
-
-
-Action<AttributeContainer> withStatus(String requestedStatus) {
-    return new Action<AttributeContainer>() {
-        void execute(AttributeContainer attributes) {
-            attributes.attribute(Attribute.of("org.gradle.status", String), requestedStatus )
-        }
-    }
+    implementation('org.junit:junit4-engine:5.+*release')
 }
 
